@@ -23,6 +23,7 @@
         spinner.style.display = 'block';
     }
     if (!city.value) {
+        icon.value = '';
         error_message_content.value = 'City field is required';
         error_message.value = true;
         if (spinner) {
