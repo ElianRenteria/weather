@@ -10,6 +10,7 @@
   const feels_like = ref(0);
   const icon = ref('');
   const error_message = ref(false);
+  const error_message_content = ref('');
   function toggleDarkMode() {
     const element: any = document.querySelector('html');
     element.classList.toggle('my-app-dark');
@@ -20,6 +21,14 @@
     const spinner = document.getElementById('pSpinner');
     if (spinner) {
         spinner.style.display = 'block';
+    }
+    if (!city.value) {
+        error_message_content.value = 'City field is required';
+        error_message.value = true;
+        if (spinner) {
+            spinner.style.display = 'none';
+        }
+        return;
     }
     try {
         error_message.value = false;
@@ -34,6 +43,7 @@
         icon.value = i;
     } catch (error) {
         console.error('Error fetching weather data:', error);
+        error_message_content.value = 'City Does Not Exist';
         error_message.value = true;
         icon.value = '';
     } finally {
@@ -56,7 +66,7 @@
           <div class="w-full flex justify-content-center" id="feedback-message"><Message severity="error" class="flex justify-content-center w-8">Message Content</Message></div>
           <div class="w-full flex flex-column justify-content-start align-items-center">
             <p>Enter any city name to get the current weather there.</p>
-            <Message severity="error" :class="{'error_message': !error_message}" class="w-10 flex justify-content-center mb-3">City Does Not Exist</Message>
+            <Message severity="error" :class="{'error_message': !error_message}" class="w-10 flex justify-content-center mb-3">{{error_message_content}}</Message>
             <div class="flex justify-content-center align-items-center">
               <FloatLabel class="m-3">
                 <InputText id="city" v-model="city" @keydown.enter="weather"/>
